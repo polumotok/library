@@ -20,15 +20,17 @@ from django.urls import path, include
 from rest_framework import routers
 
 from app_books.views import BooksViewSet
-from app_readers.views import ReadersView
+from app_readers.views import ReadersView, LocationBookView
 
 router_books = routers.DefaultRouter()
 router_books.register(r"books", BooksViewSet, basename="books")
 router_readers = routers.DefaultRouter()
 router_readers.register(r"readers", ReadersView, basename="readers")
-
+router_LocationBook = routers.DefaultRouter()
+router_LocationBook.register(r"LocationBook", LocationBookView, basename="LocationBook")
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include(router_books.urls)),
     path("api/", include(router_readers.urls)),
+    path("api/", include(router_LocationBook.urls)),
 ]

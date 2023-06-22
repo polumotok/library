@@ -1,31 +1,25 @@
 from rest_framework import serializers
 
+from .models import Reader, ReaderBook, LocationBook
 from app_books.serializers import BookSerializer
-from .models import Readers, ReadersBooks
 
 
 class ReadersSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Readers
+        model = Reader
         fields = ["first_name", "last_name"]
 
 
 class ReadersBooksSerializer(serializers.ModelSerializer):
-    # reader = ReadersSerializer()
-    # books = BookSerializer()
+    reader = ReadersSerializer()
+    books = BookSerializer()
 
     class Meta:
-        model = ReadersBooks
-        fields = ["reader", "date_of_taking", "date_of_return", "delay", "books"]
+        model = ReaderBook
+        fields = ["reader", "date_of_taking", "date_of_return", "get_return_time", "books"]
 
-    def update(self, instance, validated_data):
-        instance.date_of_return = validated_data.get(
-            "date_of_return", instance.date_of_return
-        )
-        if instance.date_of_return is not None:
-            if instance.diff_date() > 7:
-                instance.delay = True
-            else:
-                instance.delay = False
-        instance.save()
-        return instance
+class LocationBookSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
+    class Meta:
+        model = LocationBook
+        fields = ["book"]
